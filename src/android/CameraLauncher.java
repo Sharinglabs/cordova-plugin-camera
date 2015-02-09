@@ -393,7 +393,9 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                     uri = null;
                 }
             } else {
-                uri = Uri.fromFile(new File(getTempDirectoryPath(), System.currentTimeMillis() + ".jpg"));
+				// CUSTOMIZED: forces to have always the same name.
+                // uri = Uri.fromFile(new File(getTempDirectoryPath(), System.currentTimeMillis() + ".jpg"));
+				uri = Uri.fromFile(new File(getTempDirectoryPath(), "image.jpg"));
             }
 
             if (uri == null) {
@@ -402,8 +404,8 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             }
 
             // If all this is true we shouldn't compress the image.
-            if (this.targetHeight == -1 && this.targetWidth == -1 && this.mQuality == 100 && 
-                    !this.correctOrientation) {
+			// CUSTOMIZED: forces to have no processing.
+            if (true || (this.targetHeight == -1 && this.targetWidth == -1 && this.mQuality == 100 && !this.correctOrientation)) {
                 writeUncompressedImage(uri);
 
                 this.callbackContext.success(uri.toString());
@@ -498,8 +500,8 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
         else {
             // This is a special case to just return the path as no scaling,
             // rotating, nor compressing needs to be done
-            if (this.targetHeight == -1 && this.targetWidth == -1 &&
-                    (destType == FILE_URI || destType == NATIVE_URI) && !this.correctOrientation) {
+			// CUSTOMIZED: forces to have no processing.
+            if (true || (this.targetHeight == -1 && this.targetWidth == -1 && (destType == FILE_URI || destType == NATIVE_URI) && !this.correctOrientation)) {
                 this.callbackContext.success(uri.toString());
             } else {
                 String uriString = uri.toString();
