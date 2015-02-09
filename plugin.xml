@@ -21,14 +21,13 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:rim="http://www.blackberry.com/ns/widgets"
-    id="org.apache.cordova.camera"
+    id="com.trustcoms.cordova.camera"
     version="0.3.6-dev">
     <name>Camera</name>
-    <description>Cordova Camera Plugin</description>
+    <description>Cordova Camera Plugin - customized to avoid out of memory exceptions on Android</description>
     <license>Apache 2.0</license>
     <keywords>cordova,camera</keywords>
-    <repo>https://git-wip-us.apache.org/repos/asf/cordova-plugin-camera.git</repo>
-    <issue>https://issues.apache.org/jira/browse/CB/component/12320645</issue>
+    <repo>https://github.com/Sharinglabs/cordova-plugin-camera.git</repo>
 
     <js-module src="www/CameraConstants.js" name="Camera">
         <clobbers target="Camera" />
