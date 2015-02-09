@@ -394,7 +394,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 }
             } else {
 				// CUSTOMIZED: forces to have always the same name.
-                // uri = Uri.fromFile(new File(getTempDirectoryPath(), System.currentTimeMillis() + ".jpg"));
+				// uri = Uri.fromFile(new File(getTempDirectoryPath(), System.currentTimeMillis() + ".jpg"));
 				uri = Uri.fromFile(new File(getTempDirectoryPath(), "image.jpg"));
             }
 
@@ -403,7 +403,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 return;
             }
 
-            // If all this is true we shouldn't compress the image.
+			// If all this is true we shouldn't compress the image.
 			// CUSTOMIZED: forces to have no processing.
             if (true || (this.targetHeight == -1 && this.targetWidth == -1 && this.mQuality == 100 && !this.correctOrientation)) {
                 writeUncompressedImage(uri);
@@ -501,6 +501,13 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
             // This is a special case to just return the path as no scaling,
             // rotating, nor compressing needs to be done
 			// CUSTOMIZED: forces to have no processing.
+			try {
+				//Just because we have a media URI doesn't mean we have a real file, we need to make it
+				uri = Uri.fromFile(new File(FileHelper.getRealPath(uri, this.cordova)));
+			} catch (NullPointerException e) {
+				uri = null;
+			}
+			
             if (true || (this.targetHeight == -1 && this.targetWidth == -1 && (destType == FILE_URI || destType == NATIVE_URI) && !this.correctOrientation)) {
                 this.callbackContext.success(uri.toString());
             } else {
