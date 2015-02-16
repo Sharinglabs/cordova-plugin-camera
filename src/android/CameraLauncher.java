@@ -269,10 +269,6 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 croppedUri = Uri.fromFile(photo);
                 intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, croppedUri);
             } else {
-				// CUSTOMIZED: added the copy to a known place.
-				File photo = createCaptureFile(encodingType);
-				intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
-
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
             }
@@ -399,7 +395,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             } else {
 				// CUSTOMIZED: forces to have always the same name.
 				// uri = Uri.fromFile(new File(getTempDirectoryPath(), System.currentTimeMillis() + ".jpg"));
-				uri = Uri.fromFile(new File(getTempDirectoryPath(), "image.jpg"));
+				uri = Uri.fromFile(new File(getTempDirectoryPath(), "Pic.jpg"));
             }
 
             if (uri == null) {
@@ -478,6 +474,27 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
         return modifiedPath;
     }
 
+
+private void copyFile(File sourceFile, File destFile) throws IOException {
+	if (!sourceFile.exists()) {
+		return;
+	}
+
+	FileChannel source = null;
+	FileChannel destination = null;
+	source = new FileInputStream(sourceFile).getChannel();
+	destination = new FileOutputStream(destFile).getChannel();
+	if (destination != null && source != null) {
+		destination.transferFrom(source, 0, source.size());
+	}
+	if (source != null) {
+		source.close();
+	}
+	if (destination != null) {
+		destination.close();
+	}
+}
+	
 /**
      * Applies all needed transformation to the image received from the gallery.
      *
@@ -511,9 +528,12 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
 			} catch (NullPointerException e) {
 				uri = null;
 			}
+
+			File photo = createCaptureFile(encodingType);
+			this.copyFile(new File(uri), photo);
 			
             if (true || (this.targetHeight == -1 && this.targetWidth == -1 && (destType == FILE_URI || destType == NATIVE_URI) && !this.correctOrientation)) {
-                this.callbackContext.success(uri.toString());
+                this.callbackContext.success(Uri.fromFile(photo).toString());
             } else {
                 String uriString = uri.toString();
                 // Get the path to the image. Makes loading so much easier.
