@@ -531,7 +531,7 @@ private void copyFile(File sourceFile, File destFile) throws IOException {
 			}
 
 			File photo = createCaptureFile(encodingType);
-			this.copyFile(new File(uri), photo);
+			this.copyFile(new File(uri.getPath()), photo);
 			
             if (true || (this.targetHeight == -1 && this.targetWidth == -1 && (destType == FILE_URI || destType == NATIVE_URI) && !this.correctOrientation)) {
                 this.callbackContext.success(Uri.fromFile(photo).toString());
