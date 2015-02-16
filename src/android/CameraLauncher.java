@@ -269,6 +269,10 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 croppedUri = Uri.fromFile(photo);
                 intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, croppedUri);
             } else {
+				// CUSTOMIZED: added the copy to a known place.
+				File photo = createCaptureFile(encodingType);
+				intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
             }
