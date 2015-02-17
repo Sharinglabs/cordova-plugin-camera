@@ -477,22 +477,26 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
 
 
 private void copyFile(File sourceFile, File destFile) throws IOException {
-	if (!sourceFile.exists()) {
-		return;
-	}
+	try {
+		if (!sourceFile.exists()) {
+			return;
+		}
 
-	FileChannel source = null;
-	FileChannel destination = null;
-	source = new FileInputStream(sourceFile).getChannel();
-	destination = new FileOutputStream(destFile).getChannel();
-	if (destination != null && source != null) {
-		destination.transferFrom(source, 0, source.size());
-	}
-	if (source != null) {
-		source.close();
-	}
-	if (destination != null) {
-		destination.close();
+		FileChannel source = null;
+		FileChannel destination = null;
+		source = new FileInputStream(sourceFile).getChannel();
+		destination = new FileOutputStream(destFile).getChannel();
+		if (destination != null && source != null) {
+			destination.transferFrom(source, 0, source.size());
+		}
+		if (source != null) {
+			source.close();
+		}
+		if (destination != null) {
+			destination.close();
+		}
+	} catch (IOException e) {
+		
 	}
 }
 	
@@ -530,11 +534,13 @@ private void copyFile(File sourceFile, File destFile) throws IOException {
 				uri = null;
 			}
 
-			File photo = createCaptureFile(encodingType);
-			this.copyFile(new File(uri.getPath()), photo);
+			File destFile = createCaptureFile(encodingType);
+			String sourceFilePath = uri.getPath();
+			File sourceFile = new File(sourceFilePath);
+			copyFile(sourceFile, destFile);
 			
             if (true || (this.targetHeight == -1 && this.targetWidth == -1 && (destType == FILE_URI || destType == NATIVE_URI) && !this.correctOrientation)) {
-                this.callbackContext.success(Uri.fromFile(photo).toString());
+                this.callbackContext.success(Uri.fromFile(destFile).toString());
             } else {
                 String uriString = uri.toString();
                 // Get the path to the image. Makes loading so much easier.
