@@ -479,6 +479,7 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
 private void copyFile(File sourceFile, File destFile) {
 	try {
 		if (!sourceFile.exists()) {
+			Log.d(LOG_TAG, "Source file does not exist!");
 			return;
 		}
 
@@ -535,7 +536,7 @@ private void copyFile(File sourceFile, File destFile) {
 			}
 
 			File destFile = createCaptureFile(encodingType);
-			String sourceFilePath = uri.getPath();
+			String sourceFilePath = uri.toString();
 			Log.d(LOG_TAG, "Source path: " + sourceFilePath);
 			Log.d(LOG_TAG, "Dest path: " + Uri.fromFile(destFile).toString());
 			File sourceFile = new File(sourceFilePath);
