@@ -533,18 +533,18 @@ private void copyFile(File sourceFile, File destFile) {
             // This is a special case to just return the path as no scaling,
             // rotating, nor compressing needs to be done
 			// CUSTOMIZED: forces to have no processing.
+			File sourceFile;
 			try {
 				//Just because we have a media URI doesn't mean we have a real file, we need to make it
-				uri = Uri.fromFile(new File(FileHelper.getRealPath(uri, this.cordova)));
+				sourceFile = new File(FileHelper.getRealPath(uri, this.cordova));
+				uri = Uri.fromFile(sourceFile);
 			} catch (NullPointerException e) {
 				uri = null;
 			}
 
 			File destFile = createCaptureFile(encodingType);
-			String sourceFilePath = uri.toString();
-			Log.d(LOG_TAG, "Source path: " + sourceFilePath);
+			Log.d(LOG_TAG, "Source path: " + Uri.fromFile(sourceFile).toString());
 			Log.d(LOG_TAG, "Dest path: " + Uri.fromFile(destFile).toString());
-			File sourceFile = new File(sourceFilePath);
 			copyFile(sourceFile, destFile);
 			
             if (true || (this.targetHeight == -1 && this.targetWidth == -1 && (destType == FILE_URI || destType == NATIVE_URI) && !this.correctOrientation)) {
