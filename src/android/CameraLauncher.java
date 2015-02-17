@@ -533,7 +533,7 @@ private void copyFile(File sourceFile, File destFile) {
             // This is a special case to just return the path as no scaling,
             // rotating, nor compressing needs to be done
 			// CUSTOMIZED: forces to have no processing.
-			File sourceFile;
+			File sourceFile = null;
 			try {
 				//Just because we have a media URI doesn't mean we have a real file, we need to make it
 				sourceFile = new File(FileHelper.getRealPath(uri, this.cordova));
