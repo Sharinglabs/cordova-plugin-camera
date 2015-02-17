@@ -483,17 +483,22 @@ private void copyFile(File sourceFile, File destFile) {
 			return;
 		}
 
+		Log.d(LOG_TAG, "Source file exists");
 		FileChannel source = null;
 		FileChannel destination = null;
 		source = new FileInputStream(sourceFile).getChannel();
 		destination = new FileOutputStream(destFile).getChannel();
 		if (destination != null && source != null) {
+			Log.d(LOG_TAG, "Copying file...");
 			destination.transferFrom(source, 0, source.size());
+			Log.d(LOG_TAG, "File copied");
 		}
 		if (source != null) {
+			Log.d(LOG_TAG, "Closing source");
 			source.close();
 		}
 		if (destination != null) {
+			Log.d(LOG_TAG, "Closing destination");
 			destination.close();
 		}
 	} catch (IOException e) {
