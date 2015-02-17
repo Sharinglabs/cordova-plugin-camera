@@ -544,7 +544,11 @@ private void copyFile(File sourceFile, File destFile) {
 
 			File destFile = createCaptureFile(encodingType);
 			Log.d(LOG_TAG, "Before createNewFile");
+			try {
 			destFile.createNewFile();
+			} catch (IOException e) {
+				Log.e(LOG_TAG, "Error creating new file: " + e.toString());
+			}
 			Log.d(LOG_TAG, "Source path: " + Uri.fromFile(sourceFile).toString());
 			Log.d(LOG_TAG, "Dest path: " + Uri.fromFile(destFile).toString());
 			copyFile(sourceFile, destFile);
