@@ -496,7 +496,7 @@ private void copyFile(File sourceFile, File destFile) {
 			destination.close();
 		}
 	} catch (IOException e) {
-		
+		Log.e(LOG_TAG, "Error copying the file: " + e.toString());
 	}
 }
 	
@@ -536,6 +536,8 @@ private void copyFile(File sourceFile, File destFile) {
 
 			File destFile = createCaptureFile(encodingType);
 			String sourceFilePath = uri.getPath();
+			Log.d(LOG_TAG, "Source path: " + sourceFilePath);
+			Log.d(LOG_TAG, "Dest path: " + Uri.fromFile(destFile).toString());
 			File sourceFile = new File(sourceFilePath);
 			copyFile(sourceFile, destFile);
 			
