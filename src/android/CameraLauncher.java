@@ -396,7 +396,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             } else {
 				// CUSTOMIZED: forces to have always the same name.
 				// uri = Uri.fromFile(new File(getTempDirectoryPath(), System.currentTimeMillis() + ".jpg"));
-				uri = Uri.fromFile(new File(getTempDirectoryPath(), "Pic.jpg"));
+				uri = Uri.fromFile(new File(getTempDirectoryPath(), ".Pic.jpg"));
             }
 
             if (uri == null) {
