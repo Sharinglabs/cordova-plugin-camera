@@ -543,10 +543,14 @@ private void copyFile(File sourceFile, File destFile) {
 			}
 
 			File destFile = createCaptureFile(encodingType);
+			Log.d(LOG_TAG, "Before createNewFile");
+			destFile.createNewFile();
 			Log.d(LOG_TAG, "Source path: " + Uri.fromFile(sourceFile).toString());
 			Log.d(LOG_TAG, "Dest path: " + Uri.fromFile(destFile).toString());
 			copyFile(sourceFile, destFile);
-			
+			sourceFile.close();
+			destFile.close();
+			Log.d(LOG_TAG, "Done closing everything");
             if (true || (this.targetHeight == -1 && this.targetWidth == -1 && (destType == FILE_URI || destType == NATIVE_URI) && !this.correctOrientation)) {
                 this.callbackContext.success(Uri.fromFile(destFile).toString());
             } else {
