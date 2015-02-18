@@ -337,6 +337,8 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     private void processResultFromCamera(int destType, Intent intent) throws IOException {
         int rotate = 0;
 
+		LOG.d(LOG_TAG, "Process result from camera");
+		
         // Create an ExifHelper to save the exif data that is lost during compression
         ExifHelper exif = new ExifHelper();
         try {
@@ -375,17 +377,21 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 
         // If sending filename back
         else if (destType == FILE_URI || destType == NATIVE_URI) {
+			LOG.d(LOG_TAG, "Using URI");
             if (this.saveToPhotoAlbum) {
+				LOG.d(LOG_TAG, "Save to album");
                 Uri inputUri = getUriFromMediaStore();
                 try {
                     //Just because we have a media URI doesn't mean we have a real file, we need to make it
                     uri = Uri.fromFile(new File(FileHelper.getRealPath(inputUri, this.cordova)));
                 } catch (NullPointerException e) {
                     uri = null;
+					LOG.e(LOG_TAG, "Error creating the URI for the file in the album: " + e.toString());
                 }
             } else {
 				// CUSTOMIZED: forces to have always the same name.
 				// uri = Uri.fromFile(new File(getTempDirectoryPath(), System.currentTimeMillis() + ".jpg"));
+				LOG.d(LOG_TAG, "Creating URI to use");
 				uri = Uri.fromFile(new File(getFinalPath()));
 			}
 
@@ -394,16 +400,21 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 return;
             }
 
+			LOG.d(LOG_TAG, "File URI " + uri.toString());
+
 			// If all this is true we shouldn't compress the image.
 			// CUSTOMIZED: forces to have no processing.
             if (true || (this.targetHeight == -1 && this.targetWidth == -1 && this.mQuality == 100 && !this.correctOrientation)) {
 				if (this.saveToPhotoAlbum) {
+					LOG.d(LOG_TAG, "Write file to gallery: " + uri.toString());
 					writeUncompressedImage(uri);
+					LOG.d(LOG_TAG, "Copy file to temp dir");
 					File finalFile = new File(getFinalPath());
 					copyFile(new File(uri.toString()), finalFile);
 					uri = Uri.fromFile(finalFile);
 				}
 
+				LOG.d(LOG_TAG, "Returned URI" + uri.toString());
                 this.callbackContext.success(uri.toString());
             } else {
                 bitmap = getScaledBitmap(FileHelper.stripFileProtocol(imageUri.toString()));
