@@ -759,6 +759,7 @@ private void copyFile(File sourceFile, File destFile) {
      */
     private void writeUncompressedImage(Uri uri) throws FileNotFoundException,
             IOException {
+		LOG.d(LOG_TAG, "Write uncompressed image: from " + imageUri.toString() + " to " + uri.toString());
         FileInputStream fis = new FileInputStream(FileHelper.stripFileProtocol(imageUri.toString()));
         OutputStream os = this.cordova.getActivity().getContentResolver().openOutputStream(uri);
         byte[] buffer = new byte[4096];
@@ -923,8 +924,9 @@ private void copyFile(File sourceFile, File destFile) {
             bitmap.recycle();
         }
 
-        // Clean up initial camera-written image file.
-        (new File(FileHelper.stripFileProtocol(oldImage.toString()))).delete();
+		// CUSTOMIZED: don't clean it, we always want to keep it.
+        //// Clean up initial camera-written image file.
+        // (new File(FileHelper.stripFileProtocol(oldImage.toString()))).delete();
 
         checkForDuplicateImage(imageType);
         // Scan for the gallery to update pic refs in gallery
