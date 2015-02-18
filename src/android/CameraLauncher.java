@@ -57,7 +57,7 @@ import android.util.Log;
  * and returns the captured image.  When the camera view is closed, the screen displayed before
  * the camera view was shown is redisplayed.
  */
-public class CameraLauncher extends CordovaPlugin implements MediaScannerConnectionClient {
+public class  extends CordovaPlugin implements MediaScannerConnectionClient {
 
     private static final int DATA_URL = 0;              // Return base64 encoded string
     private static final int FILE_URI = 1;              // Return file uri (content://media/external/images/media/2 for Android)
@@ -77,7 +77,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     private static final String GET_VIDEO = "Get Video";
     private static final String GET_All = "Get All";
     
-    private static final String LOG_TAG = "CameraLauncher";
+    private static final String LOG_TAG = "";
     private static final int CROP_CAMERA = 100;
 
     private int mQuality;                   // Compression quality hint (0-100: 0=low quality & high compression, 100=compress of max quality)
@@ -414,7 +414,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 					uri = Uri.fromFile(finalFile);
 				}
 
-				LOG.d(LOG_TAG, "Returned URI" + uri.toString());
+				LOG.d(LOG_TAG, "Returned URI " + uri.toString());
                 this.callbackContext.success(uri.toString());
             } else {
                 bitmap = getScaledBitmap(FileHelper.stripFileProtocol(imageUri.toString()));
@@ -560,7 +560,9 @@ private void copyFile(File sourceFile, File destFile) {
 			copyFile(sourceFile, destFile);
 			Log.d(LOG_TAG, "Done copying");
             if (true || (this.targetHeight == -1 && this.targetWidth == -1 && (destType == FILE_URI || destType == NATIVE_URI) && !this.correctOrientation)) {
-                this.callbackContext.success(Uri.fromFile(destFile).toString());
+				String returnedUri = Uri.fromFile(destFile).toString();
+				LOG.d(LOG_TAG, "Returned URI " + returnedUri);
+                this.callbackContext.success(returnedUri);
             } else {
                 String uriString = uri.toString();
                 // Get the path to the image. Makes loading so much easier.
