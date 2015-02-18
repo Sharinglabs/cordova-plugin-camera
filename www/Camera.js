@@ -68,6 +68,10 @@ cameraExport.getPicture = function(successCallback, errorCallback, options) {
     //return new CameraPopoverHandle();
 };
 
+cameraExport.getAndroidFinalPath = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "Camera", "getAndroidFinalPath", []);
+};
+
 cameraExport.cleanup = function(successCallback, errorCallback) {
     exec(successCallback, errorCallback, "Camera", "cleanup", []);
 };
