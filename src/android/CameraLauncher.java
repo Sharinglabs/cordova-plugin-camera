@@ -50,7 +50,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 
 /**
  * This class launches the camera view, allows the user to take a picture, closes the camera view,
@@ -318,7 +317,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             cropIntent, CROP_CAMERA);
       }
     } catch (ActivityNotFoundException anfe) {
-      Log.e(LOG_TAG, "Crop operation not supported on this device");
+      LOG.e(LOG_TAG, "Crop operation not supported on this device");
       // Send Uri back to JavaScript for viewing image
       this.callbackContext.success(picUri.toString());
     }
@@ -362,7 +361,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             
             // Double-check the bitmap.
             if (bitmap == null) {
-                Log.d(LOG_TAG, "I either have a null image path or bitmap");
+                LOG.d(LOG_TAG, "I either have a null image path or bitmap");
                 this.failPicture("Unable to create bitmap!");
                 return;
             }
@@ -414,7 +413,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 					uri = Uri.fromFile(finalFile);
 				}
 
-				LOG.d(LOG_TAG, "Returned URI" + uri.toString());
+				LOG.d(LOG_TAG, "Returned URI " + uri.toString());
                 this.callbackContext.success(uri.toString());
             } else {
                 bitmap = getScaledBitmap(FileHelper.stripFileProtocol(imageUri.toString()));
@@ -485,30 +484,30 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
 private void copyFile(File sourceFile, File destFile) {
 	try {
 		if (!sourceFile.exists()) {
-			Log.d(LOG_TAG, "Source file does not exist!");
+			LOG.d(LOG_TAG, "Source file does not exist!");
 			return;
 		}
 
-		Log.d(LOG_TAG, "Source file exists");
+		LOG.d(LOG_TAG, "Source file exists");
 		FileChannel source = null;
 		FileChannel destination = null;
 		source = new FileInputStream(sourceFile).getChannel();
 		destination = new FileOutputStream(destFile).getChannel();
 		if (destination != null && source != null) {
-			Log.d(LOG_TAG, "Copying file...");
+			LOG.d(LOG_TAG, "Copying file...");
 			destination.transferFrom(source, 0, source.size());
-			Log.d(LOG_TAG, "File copied");
+			LOG.d(LOG_TAG, "File copied");
 		}
 		if (source != null) {
-			Log.d(LOG_TAG, "Closing source");
+			LOG.d(LOG_TAG, "Closing source");
 			source.close();
 		}
 		if (destination != null) {
-			Log.d(LOG_TAG, "Closing destination");
+			LOG.d(LOG_TAG, "Closing destination");
 			destination.close();
 		}
 	} catch (IOException e) {
-		Log.e(LOG_TAG, "Error copying the file: " + e.toString());
+		LOG.e(LOG_TAG, "Error copying the file: " + e.toString());
 	}
 }
 	
@@ -549,25 +548,27 @@ private void copyFile(File sourceFile, File destFile) {
 			}
 
 			File destFile = createCaptureFile(encodingType);
-			Log.d(LOG_TAG, "Before createNewFile");
+			LOG.d(LOG_TAG, "Before createNewFile");
 			try {
 			destFile.createNewFile();
 			} catch (IOException e) {
-				Log.e(LOG_TAG, "Error creating new file: " + e.toString());
+				LOG.e(LOG_TAG, "Error creating new file: " + e.toString());
 			}
-			Log.d(LOG_TAG, "Source path: " + Uri.fromFile(sourceFile).toString());
-			Log.d(LOG_TAG, "Dest path: " + Uri.fromFile(destFile).toString());
+			LOG.d(LOG_TAG, "Source path: " + Uri.fromFile(sourceFile).toString());
+			LOG.d(LOG_TAG, "Dest path: " + Uri.fromFile(destFile).toString());
 			copyFile(sourceFile, destFile);
-			Log.d(LOG_TAG, "Done copying");
+			LOG.d(LOG_TAG, "Done copying");
             if (true || (this.targetHeight == -1 && this.targetWidth == -1 && (destType == FILE_URI || destType == NATIVE_URI) && !this.correctOrientation)) {
-                this.callbackContext.success(Uri.fromFile(destFile).toString());
+				String returnedUri = Uri.fromFile(destFile).toString();
+				LOG.d(LOG_TAG, "Returned URI " + returnedUri);
+                this.callbackContext.success(returnedUri);
             } else {
                 String uriString = uri.toString();
                 // Get the path to the image. Makes loading so much easier.
                 String mimeType = FileHelper.getMimeType(uriString, this.cordova);
                 // If we don't have a valid image so quit.
                 if (!("image/jpeg".equalsIgnoreCase(mimeType) || "image/png".equalsIgnoreCase(mimeType))) {
-                    Log.d(LOG_TAG, "I either have a null image path or bitmap");
+                    LOG.d(LOG_TAG, "I either have a null image path or bitmap");
                     this.failPicture("Unable to retrieve path to picture!");
                     return;
                 }
@@ -578,7 +579,7 @@ private void copyFile(File sourceFile, File destFile) {
                     e.printStackTrace();
                 }
                 if (bitmap == null) {
-                    Log.d(LOG_TAG, "I either have a null image path or bitmap");
+                    LOG.d(LOG_TAG, "I either have a null image path or bitmap");
                     this.failPicture("Unable to create bitmap!");
                     return;
                 }
