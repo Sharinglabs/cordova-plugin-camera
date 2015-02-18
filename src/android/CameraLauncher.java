@@ -57,7 +57,7 @@ import android.util.Log;
  * and returns the captured image.  When the camera view is closed, the screen displayed before
  * the camera view was shown is redisplayed.
  */
-public class  extends CordovaPlugin implements MediaScannerConnectionClient {
+public class CameraLauncher extends CordovaPlugin implements MediaScannerConnectionClient {
 
     private static final int DATA_URL = 0;              // Return base64 encoded string
     private static final int FILE_URI = 1;              // Return file uri (content://media/external/images/media/2 for Android)
@@ -77,7 +77,7 @@ public class  extends CordovaPlugin implements MediaScannerConnectionClient {
     private static final String GET_VIDEO = "Get Video";
     private static final String GET_All = "Get All";
     
-    private static final String LOG_TAG = "";
+    private static final String LOG_TAG = "CameraLauncher";
     private static final int CROP_CAMERA = 100;
 
     private int mQuality;                   // Compression quality hint (0-100: 0=low quality & high compression, 100=compress of max quality)
