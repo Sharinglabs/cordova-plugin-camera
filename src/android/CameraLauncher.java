@@ -399,7 +399,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 				if (this.saveToPhotoAlbum) {
 					writeUncompressedImage(uri);
 					File finalFile = new File(getFinalPath());
-					copyFile(new File(uri), finalFile);
+					copyFile(new File(uri.toString()), finalFile);
 					uri = Uri.fromFile(finalFile);
 				}
 
