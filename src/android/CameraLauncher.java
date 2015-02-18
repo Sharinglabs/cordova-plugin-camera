@@ -226,15 +226,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
      * @return a File object pointing to the temporary picture
      */
     private File createCaptureFile(int encodingType) {
-        File photo = null;
-        if (encodingType == JPEG) {
-            photo = new File(getTempDirectoryPath(), ".Pic.jpg");
-        } else if (encodingType == PNG) {
-            photo = new File(getTempDirectoryPath(), ".Pic.png");
-        } else {
-            throw new IllegalArgumentException("Invalid Encoding Type: " + encodingType);
-        }
-        return photo;
+            return new File(getFinalPath());
     }
 
     /**
@@ -332,6 +324,10 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     }
   }
 
+    private String getFinalPath() {
+		return getTempDirectoryPath() + "/.Pic." + ((this.encodingType == JPEG) ? "jpg" : "png");
+	}
+  
     /**
      * Applies all needed transformation to the image received from the camera.
      *
@@ -344,12 +340,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
         // Create an ExifHelper to save the exif data that is lost during compression
         ExifHelper exif = new ExifHelper();
         try {
-            if (this.encodingType == JPEG) {
-                exif.createInFile(getTempDirectoryPath() + "/.Pic.jpg");
-                exif.readExifData();
-                rotate = exif.getOrientation();
-            } else if (this.encodingType == PNG) {
-                exif.createInFile(getTempDirectoryPath() + "/.Pic.png");
+                exif.createInFile(getFinalPath());
                 exif.readExifData();
                 rotate = exif.getOrientation();
             }
@@ -396,8 +387,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             } else {
 				// CUSTOMIZED: forces to have always the same name.
 				// uri = Uri.fromFile(new File(getTempDirectoryPath(), System.currentTimeMillis() + ".jpg"));
-				uri = Uri.fromFile(new File(getTempDirectoryPath(), ".Pic.jpg"));
-            }
+			}
 
             if (uri == null) {
                 this.failPicture("Error capturing image - no media storage found.");
@@ -407,7 +397,12 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 			// If all this is true we shouldn't compress the image.
 			// CUSTOMIZED: forces to have no processing.
             if (true || (this.targetHeight == -1 && this.targetWidth == -1 && this.mQuality == 100 && !this.correctOrientation)) {
-                writeUncompressedImage(uri);
+				if (this.saveToPhotoAlbum) {
+					writeUncompressedImage(uri);
+					File finalFile = new File(getFinalPath());
+					copyFile(new File(uri), finalFile);
+					uri = Uri.fromFile(finalFile);
+				}
 
                 this.callbackContext.success(uri.toString());
             } else {
