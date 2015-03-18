@@ -405,8 +405,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 			LOG.d(LOG_TAG, "File URI " + uri.toString());
 
 			// If all this is true we shouldn't compress the image.
-			// CUSTOMIZED: forces to have no processing.
-            if (true || (this.targetHeight == -1 && this.targetWidth == -1 && this.mQuality == 100 && !this.correctOrientation)) {
+            if (this.targetHeight == -1 && this.targetWidth == -1 && this.mQuality == 100 && !this.correctOrientation) {
 				if (this.saveToPhotoAlbum) {
 					LOG.d(LOG_TAG, "Write file to gallery: " + uri.toString());
 					writeUncompressedImage(uri);
