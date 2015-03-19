@@ -380,39 +380,32 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
         // If sending filename back
         else if (destType == FILE_URI || destType == NATIVE_URI) {
 			LOG.d(LOG_TAG, "Using URI");
+			// CUSTOMIZED: START forces to have always the same name.
+			Uri photoAlbumUri = null;
             if (this.saveToPhotoAlbum) {
-				LOG.d(LOG_TAG, "Save to album");
+				LOG.d(LOG_TAG, "We also save to album");
                 Uri inputUri = getUriFromMediaStore();
                 try {
                     //Just because we have a media URI doesn't mean we have a real file, we need to make it
-                    uri = Uri.fromFile(new File(FileHelper.getRealPath(inputUri, this.cordova)));
+                    photoAlbumUri = Uri.fromFile(new File(FileHelper.getRealPath(inputUri, this.cordova)));
                 } catch (NullPointerException e) {
-                    uri = null;
 					LOG.e(LOG_TAG, "Error creating the URI for the file in the album: " + e.toString());
                 }
-            } else {
-				// CUSTOMIZED: forces to have always the same name.
-				// uri = Uri.fromFile(new File(getTempDirectoryPath(), System.currentTimeMillis() + ".jpg"));
-				LOG.d(LOG_TAG, "Creating URI to use");
-				uri = Uri.fromFile(new File(getFinalPath()));
-			}
-
-            if (uri == null) {
-                this.failPicture("Error capturing image - no media storage found.");
-                return;
             }
+
+			LOG.d(LOG_TAG, "Creating final URI to use");
+			uri = Uri.fromFile(new File(getFinalPath()));
+			// CUSTOMIZED: END forces to have always the same name.
 
 			LOG.d(LOG_TAG, "File URI " + uri.toString());
 
 			// If all this is true we shouldn't compress the image.
             if (this.targetHeight == -1 && this.targetWidth == -1 && this.mQuality == 100 && !this.correctOrientation) {
-				if (this.saveToPhotoAlbum) {
-					LOG.d(LOG_TAG, "Write file to gallery: " + uri.toString());
+				if (photoAlbumUri != null) {
+					LOG.d(LOG_TAG, "Write file to temp dir");
 					writeUncompressedImage(uri);
-					LOG.d(LOG_TAG, "Copy file to temp dir");
-					File finalFile = new File(getFinalPath());
-					copyFile(new File(uri.toString()), finalFile);
-					uri = Uri.fromFile(finalFile);
+					LOG.d(LOG_TAG, "Copy file to gallery: " + photoAlbumUri.toString());
+					copyFile(new File(getFinalPath()), new File(photoAlbumUri.toString()));
 				}
 
 				LOG.d(LOG_TAG, "Returned URI " + uri.toString());
@@ -440,6 +433,14 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                     exif.createOutFile(exifPath);
                     exif.writeExifData();
                 }
+				
+				// CUSTOMIZED: START 
+				if (photoAlbumUri != null) {
+					LOG.d(LOG_TAG, "Copy file gallery");
+					copyFile(new File(getFinalPath()), new File(photoAlbumUri.toString()));
+				}
+				// CUSTOMIZED: END 
+				
                 if (this.allowEdit) {
                     performCrop(uri);
                 } else {
