@@ -346,7 +346,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
       catch (IOException e)
       {
           e.printStackTrace();
-          Log.e(LOG_TAG, "Unable to write to file");
+          LOG.e(LOG_TAG, "Unable to write to file");
   }
     }
   }
@@ -716,7 +716,7 @@ private void copyFile(File sourceFile, File destFile) {
                     processResultFromCamera(destType, intent);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.e(LOG_TAG, "Unable to write to file");
+                    LOG.e(LOG_TAG, "Unable to write to file");
                 }
 
       }// If cancelled
