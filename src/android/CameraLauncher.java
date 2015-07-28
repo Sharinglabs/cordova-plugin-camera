@@ -387,7 +387,8 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 Uri inputUri = getUriFromMediaStore();
                 try {
                     //Just because we have a media URI doesn't mean we have a real file, we need to make it
-                    photoAlbumUri = Uri.fromFile(new File(FileHelper.getRealPath(inputUri, this.cordova)));
+                    String photoAlbumPath = FileHelper.getRealPath(inputUri, this.cordova);
+                    photoAlbumUri = Uri.parse(photoAlbumPath);
 					LOG.d(LOG_TAG, "Path in album " + photoAlbumUri.toString());
                 } catch (NullPointerException e) {
 					LOG.e(LOG_TAG, "Error creating the URI for the file in the album: " + e.toString());
@@ -493,6 +494,7 @@ private void copyFile(File sourceFile, File destFile) {
 		}
 		
 		if (!destFile.exists()) {
+            destFile.getParentFile().mkdirs();
 			destFile.createNewFile();
 		}
 
