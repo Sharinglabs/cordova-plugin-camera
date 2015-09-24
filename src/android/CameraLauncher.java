@@ -404,8 +404,6 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 			// If all this is true we shouldn't compress the image.
             if (this.targetHeight == -1 && this.targetWidth == -1 && this.mQuality == 100 && !this.correctOrientation) {
 				if (photoAlbumUri != null) {
-					LOG.d(LOG_TAG, "Write file to temp dir");
-					writeUncompressedImage(uri);
 					LOG.d(LOG_TAG, "Copy file to gallery: " + photoAlbumUri.toString());
 					copyFile(new File(getFinalPath()), new File(photoAlbumUri.toString()));
 				}
