@@ -743,9 +743,12 @@ private void copyFile(File sourceFile, File destFile) {
             matrix.setRotate(rotate, (float) bitmap.getWidth() / 2, (float) bitmap.getHeight() / 2);
         }
 
+        Bitmap rotatedBitmap = bitmap;
         try
         {
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            // Forcefully recycles the previous bitmap to reclame memory ASAP.
+            bitmap.recycle();
             exif.resetOrientation();
         }
         catch (OutOfMemoryError oom)
@@ -756,7 +759,7 @@ private void copyFile(File sourceFile, File destFile) {
             // If you do not catch the OutOfMemoryError, the Android app crashes.
         }
 
-        return bitmap;
+        return rotatedBitmap;
     }
 
     /**
