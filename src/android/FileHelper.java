@@ -47,13 +47,28 @@ public class FileHelper {
         String realPath = null;
 
         if (uriString.startsWith("content://")) {
-            String[] proj = { _DATA };
-            Cursor cursor = cordova.getActivity().managedQuery(Uri.parse(uriString), proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(_DATA);
+            // The following doesn't always work.
+//            String[] proj = { _DATA };
+//            Cursor cursor = cordova.getActivity().managedQuery(Uri.parse(uriString), proj, null, null, null);
+//            int column_index = cursor.getColumnIndexOrThrow(_DATA);
+//            cursor.moveToFirst();
+//            realPath = cursor.getString(column_index);
+
+            // http://stackoverflow.com/a/20470572
+            Cursor cursor = cordova.getActivity().getContentResolver().query(Uri.parse(uriString), null, null, null, null);
             cursor.moveToFirst();
-            realPath = cursor.getString(column_index);
+            String document_id = cursor.getString(0);
+            document_id = document_id.substring(document_id.lastIndexOf(":")+1);
+            cursor.close();
+
+            cursor = cordova.getActivity().getContentResolver().query(
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+            cursor.moveToFirst();
+            realPath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            cursor.close();
             if (realPath == null) {
-                LOG.e(LOG_TAG, "Could get real path for URI string %s", uriString);
+                LOG.e(LOG_TAG, "Cannot get real path for URI string %s", uriString);
             }
         } else if (uriString.startsWith("file://")) {
             realPath = uriString.substring(7);
