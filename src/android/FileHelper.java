@@ -20,6 +20,7 @@ package org.apache.cordova.camera;
 
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.webkit.MimeTypeMap;
 
 import org.apache.cordova.CordovaInterface;
@@ -62,7 +63,7 @@ public class FileHelper {
             cursor.close();
 
             cursor = cordova.getActivity().getContentResolver().query(
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
             cursor.moveToFirst();
             realPath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
